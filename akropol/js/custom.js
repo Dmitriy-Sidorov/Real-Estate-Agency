@@ -1,0 +1,175 @@
+jQuery(document).ready(function ($) {
+  $("a.fancy").fancybox({
+    padding: 0
+  });
+  $("a.callback").colorbox({inline: true, opacity: 0.7});
+  $('.request_modal').click(function () {
+    var name = $('#name').val();
+    var phone = $('#phone').val();
+    if (name.length == 0) {
+      swal({
+        title: "",
+        text: "Пожалуйста, заполните поле 'ФИО'",
+        type: "error",
+        confirmButtonText: "ОK",
+        confirmButtonColor: "#FCB10F"
+      });
+      return;
+    }
+    if (phone.length == 0) {
+      swal({
+        title: "",
+        text: "Пожалуйста, заполните поле 'Телефон'",
+        type: "error",
+        confirmButtonText: "ОK",
+        confirmButtonColor: "#FCB10F"
+      });
+      return;
+    }
+    $.post('/mail/request.php', $('#request_form').serialize(), function () {
+      swal({
+        title: "",
+        text: "Спасибо! Ваша заявка успешно отправлена!",
+        type: "success",
+        confirmButtonText: "ОK",
+        confirmButtonColor: "#FCB10F"
+      });
+    });
+  });
+
+  $("#contactform").submit(function () {
+
+    var action = $(this).attr('action');
+
+    $("#message").slideUp(750, function () {
+      $('#message').hide();
+
+      $('#submit')
+        .after('<img src="' + $('#image_path').val() + 'images/assets/ajax-loader.gif" class="loader" />')
+        .attr('disabled', 'disabled');
+
+      $.post(action, {
+          name: $('#name').val(),
+          email: $('#email').val(),
+          phone: $('#phone').val(),
+          comments: $('#comments').val(),
+          subject: $('#subject').val(),
+        },
+        function (data) {
+          document.getElementById('message').innerHTML = data;
+          $('#message').slideDown('slow');
+          $('.contact-form img.loader').fadeOut('slow', function () {
+            $(this).remove()
+          });
+          $('#submit').removeAttr('disabled');
+          if (data.match('success') != null) $('.contact-form').slideUp('slow');
+
+        }
+      );
+    });
+    return false;
+  });
+  var $container = $('.grid-holder');
+  // Инициализация
+  $container.masonry({
+    itemSelector: '.grid-item'
+  });
+
+  $('.novostroyNav a').click( function(){ // ловим клик по ссылке с классом go_to
+    var scroll_el = $(this).attr('href'); // возьмем содержимое атрибута href, должен быть селектором, т.е. например начинаться с # или .
+    if ($(scroll_el).length != 0) { // проверим существование элемента чтобы избежать ошибки
+      $('html, body').animate({ scrollTop: $(scroll_el).offset().top }, 500); // анимируем скроолинг к элементу scroll_el
+    }
+    return false; // выключаем стандартное действие
+  });
+  
+  $('#property-thumbs').flexslider({
+    animation: "slide",
+    controlNav: false,
+    animationLoop: false,
+    slideshow: false,
+    itemWidth: 175,
+    itemMargin: 10,
+    asNavFor: '#property-images',
+    prevText: "",
+    nextText: ""
+  });
+
+  $('#property-images').flexslider({
+    animation: "slide",
+    controlNav: false,
+    animationLoop: false,
+    slideshow: false,
+    sync: "#property-thumbs",
+    prevText: "",
+    nextText: ""
+  });
+  $(".owl-properties").owlCarousel({
+    items: 4,
+    loop: true,
+    margin: 15,
+    responsive : {
+      1199 : {
+        items: 4,
+        },
+        // breakpoint from 480 up
+        991 : {
+          items: 3,
+        },
+        767 : {
+          items: 2,
+        },
+        543: {
+          items: 1
+        },
+        0: {
+          items: 1
+        }
+    }
+
+  });
+  $(".menu-toggle").click(function () {
+    $(".main-menu-wrapper").slideToggle();
+    $(".menu-toggle").toggleClass('opened');
+    return false;
+  });
+  $(window).resize(function () {
+    if ($(".menu-toggle").hasClass("opened")) {
+      $(".main-menu-wrapper").css("display", "block");
+    } else {
+      $(".menu-toggle").css("display", "none");
+    }
+  });
+  $('#novostroy').multiselect({
+
+    includeSelectAllOption: false
+
+  });
+  $(".owl-agents").owlCarousel({
+    items: 3,
+    loop: true,
+		dots: true,
+		nav: true,
+		navText: ["Назад","Далее"],
+    margin: 15,
+    responsive : {
+      1199 : {
+        items: 3,
+      },
+      // breakpoint from 480 up
+      991 : {
+        items: 3,
+      },
+      767 : {
+        items: 2,
+      },
+      543: {
+        items: 1
+      },
+      0: {
+        items: 1
+      }
+    }
+
+  });
+});

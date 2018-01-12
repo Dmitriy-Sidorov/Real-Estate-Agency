@@ -1,0 +1,4 @@
+<p style="font-weight: bold;">Бесплатно поможем оформить ипотеку с господдержкой c гарантией одобрения. Пять банков-партнеров. Сэкономьте свое время и воспользуйтесь сервисом агентства недвижимости Акрополь!</p>
+<blockquote>
+<div style="overflow: auto;"><span style="float: left; margin: 0;"><i class="fa fa-none" style="float: left;"></i> <a class="callback btn btn-callback cboxElement" style="float: left; margin: 0;" data-target="#ipotekamodal" data-toggle="modal">Заявка на ипотеку</a></span><span style="font-size: 21px; margin-left: 15px; line-height: 37px; float: left;">48-30-03 | 64-07-79</span></div>
+</blockquote>

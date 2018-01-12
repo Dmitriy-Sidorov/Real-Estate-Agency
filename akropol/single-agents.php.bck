@@ -1,0 +1,122 @@
+<?
+get_header(); ?>
+<?php while (have_posts()):the_post(); ?>
+  <div class="main" role="main">
+  <div id="content" class="content full">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="breadcrumbs" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+              <span itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
+                <a href="/" itemprop="item" class="home">
+                  <span itemprop="name">Главная</span>
+                </a>
+              </span>
+            <span class="sep"> / </span>
+            <span itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
+                <a href="/agents/" itemprop="item">
+                  <span itemprop="name">Наши агенты</span>
+                </a>
+              </span>
+            <span class="sep"> / </span>
+            <span class="current"><? the_title();?></span>
+          </div>
+          <?$query = new WP_Query(array('post_type'=>'objects','post_status'=>'publish', 'meta_query' => array(
+              array(
+                  'key' => 'agent',
+                  'value' => get_the_ID(),
+                  'type' => 'numeric',
+                  'compare' => '=',
+              )
+          )));
+          $count = 0;
+          while($query->have_posts()):$query->the_post();
+            $count++;
+          endwhile;wp_reset_postdata();
+          ?>
+          <div class="single-agent">
+            <div class="counts pull-right">
+              <strong>
+                <?=$count?>
+              </strong>
+              <span>объектов</span>
+            </div>
+            <h2 class="page-title"><? the_title() ?></h2>
+            <div class="row">
+              <?php
+              if (!empty(get_the_post_thumbnail())) { ?>
+                <div class="col-md-6 col-sm-6">
+                  <?= get_the_post_thumbnail() ?>
+                </div>
+              <? } else { ?>
+                <div class="col-md-6 col-sm-6">
+                  <img src="<?=get_template_directory_uri()?>/images/default_agent1.png" alt="<? the_title() ?>"
+                       class="img-thumbnail">
+                </div>
+                <?
+              }
+              ?>
+              <div class="col-md-12 col-sm-12">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-sm-6">
+                <div class="agent-contact-details">
+                  <h4>Контактные данные</h4>
+                  <?php
+                  /* Display Agent Contact/Social Details
+                                   ==========================================*/
+                  //Agent Contact Details
+                  $userMobileNo = get_field("phone");
+                  $user_position = get_field("position");
+                  $user_email = get_field("email");
+                  if (!empty($userMobileNo) || !empty($user_email) || !empty($user_position)) {
+                    echo '<ul class="list-group">';
+                    // Display Agent Mobile Number
+                    if (!empty($user_position)) {
+                      echo '<li class="list-group-item"> <span class="badge">' . $user_position . '</span> Должность </li>';
+                    }
+                    if (!empty($userMobileNo)) {
+                      echo '<li class="list-group-item"> <span class="badge">' . $userMobileNo . '</span> Номер агента </li>';
+                    }
+                    // Display Agent Email Address
+                    if (!empty($user_email)) {
+                      echo '<li class="list-group-item"> <span class="badge">' . $user_email . '</span> Email</li>';
+                    }
+
+                    echo '</ul>';
+                  } ?>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6">
+                <?php if (!empty($user_email)) { ?>
+                  <div class="agent-contact-form">
+                    <h4>Форма обратной связи</h4>
+                    <form method="post" id="agentcontactform" name="agentcontactform" class="agent-contact-form"
+                          action="<?php echo get_template_directory_uri() ?>/mail/agent_contact.php">
+                      <input type="email" id="email" name="Email Address" class="form-control"
+                             placeholder="Ваш email адресс">
+                      <textarea name="comments" id="comments" class="form-control"
+                                placeholder="Введите письмо" cols="10" rows="5"></textarea>
+                      <input type="hidden" value="" name="subject" id="subject">
+                      <input type="hidden" name="image_path" id="image_path"
+                             value="<?php echo get_template_directory_uri(); ?>">
+                      <input id="agent_email" name="agent_email" type="hidden" value="<?php echo $user_email; ?>">
+                      <p class="formObyaz">Нажимая «Отправить», вы <a href="/soglasie-na-obrabotku-personalnyih-dannyih"
+                                                                      target="_blank">даёте своё согласие на обработку
+                          персональных данных</a></p>
+                      <button type="submit" class="btn btn-primary pull-right">Отправить</button>
+                    </form>
+                  </div>
+                  <div class="clearfix"></div>
+                  <div id="message"></div>
+                <?php } ?>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<? endwhile; ?>
+<? get_footer(); ?>
